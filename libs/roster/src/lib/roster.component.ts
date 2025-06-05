@@ -20,7 +20,7 @@ export class RosterComponent implements OnInit {
       next: (data: RosterItem[]) => {
         this.rosterItems = data;
       },
-      error: (err) => console.error('Error fetching roster:', err),
+      error: (err: any) => console.error('Error fetching roster:', err),
     });
   }
 }
