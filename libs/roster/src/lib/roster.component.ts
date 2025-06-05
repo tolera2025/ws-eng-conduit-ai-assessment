@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { RosterService } from './roster.service';
 import { RosterItem } from './roster.models';
 
 @Component({
   selector: 'realworld-roster',
   templateUrl: './roster.component.html',
-  styleUrls: [],
-  providers: [],
-  imports: [],
+  styleUrls: ['./roster.component.css'],
+  imports: [CommonModule, RouterModule],
   standalone: true,
 })
 export class RosterComponent implements OnInit {
