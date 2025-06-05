@@ -4,7 +4,9 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { EntityManager, wrap } from '@mikro-orm/core';
 import { SECRET } from '../config';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, LoginUserDto, UpdateUserDto, RosterItemDto } from './dto/roster-item.dto';
+import { User } from './user.entity';
+import { Article } from '../article/article.entity';
 import { User } from './user.entity';
 import { IUserRO } from './user.interface';
 import { UserRepository } from './user.repository';
@@ -15,6 +17,26 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     return this.userRepository.findAll();
+  }
+
+  async getRosterData(): Promise<RosterItemDto[]> {
+    const users: User[] = await this.userRepository.findAll({ populate: ['articles'] });
+    return users.map((user: User) => {
+      const articles: Article[] = user.articles.getItems();
+      const articleCount = articles.length;
+      const totalFavoritesReceived = articles.reduce((sum: number, article: Article) => sum + article.favoritesCount, 0);
+      const firstArticleDate = articles.length > 0 ? new Date(Math.min(...articles.map((article: Article) => article.createdAt.getTime()))) : null;
+      const image = user.image || 'https://static.productionready.io/images/smiley-cyrus.jpg';
+
+      return {
+        username: user.username,
+        image,
+        bio: user.bio,
+        articleCount,
+        totalFavoritesReceived,
+        firstArticleDate,
+      } as RosterItemDto;
+    });
   }
 
   async findOne(loginUserDto: LoginUserDto): Promise<User> {
