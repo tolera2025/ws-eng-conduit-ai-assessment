@@ -1,0 +1,41 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.roster-author-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+  border: 1px solid #eee;
+}
+
+td a {
+  color: #373a3c;
+  text-decoration: none;
+}
+
+td a:hover {
+  text-decoration: underline;
+  color: #282a2c;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
