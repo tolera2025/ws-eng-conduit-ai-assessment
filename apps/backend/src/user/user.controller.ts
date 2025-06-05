@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, UsePipes } from '@nestjs/common';
 import { ValidationPipe } from '../shared/pipes/validation.pipe';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, LoginUserDto, UpdateUserDto, RosterItemDto } from './dto/roster-item.dto';
 import { User } from './user.decorator';
 import { IUserRO } from './user.interface';
 import { UserService } from './user.service';
 
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiResponse } from '@nestjs/swagger';
 
 @ApiBearerAuth()
 @ApiTags('user')
@@ -29,7 +29,11 @@ export class UserController {
     return this.userService.create(userData);
   }
 
-  @Delete('users/:slug')
+  @Get('users/roster')
+  @ApiResponse({ status: 200, description: 'Get roster data', type: [RosterItemDto] })
+  async getRosterData(): Promise<RosterItemDto[]> {
+    return this.userService.getRosterData();
+  }
   async delete(@Param() params: Record<string, string>): Promise<any> {
     return this.userService.delete(params.slug);
   }
