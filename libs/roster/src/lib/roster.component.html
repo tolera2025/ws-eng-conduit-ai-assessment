@@ -1,1 +1,27 @@
-<p>TODO</p>
+<h1>Conduit Roster</h1>
+<div *ngIf="rosterItems && rosterItems.length > 0; else noData">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Articles Authored</th>
+        <th>Total Favorites</th>
+        <th>First Article Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of rosterItems">
+        <td>
+          <img [src]="item.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'" alt="{{ item.username }} profile image" class="roster-author-image">
+          <a [routerLink]="['/profile', item.username]">{{ item.username }}</a>
+        </td>
+        <td>{{ item.articleCount }}</td>
+        <td>{{ item.totalFavoritesReceived }}</td>
+        <td>{{ item.firstArticleDate ? (item.firstArticleDate | date:'mediumDate') : 'N/A' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ng-template #noData>
+  <p>Loading roster or no users found...</p>
+</ng-template>
