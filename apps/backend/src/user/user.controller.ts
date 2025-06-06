@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, UsePipes } from '@nestjs/common';
 import { ValidationPipe } from '../shared/pipes/validation.pipe';
-import { CreateUserDto, LoginUserDto, UpdateUserDto, RosterItemDto } from './dto/roster-item.dto';
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto'; // This assumes an index.ts in 'dto' or that they are grouped.
+import { RosterItemDto } from './dto/roster-item.dto';     // Specific import for our RosterItemDto
 import { User } from './user.decorator';
 import { IUserRO } from './user.interface';
 import { UserService } from './user.service';

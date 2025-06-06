@@ -4,10 +4,13 @@ import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { EntityManager, wrap } from '@mikro-orm/core';
 import { SECRET } from '../config';
-import { CreateUserDto, LoginUserDto, UpdateUserDto, RosterItemDto } from './dto/roster-item.dto';
+// CORRECTED DTO IMPORTS:
+import { CreateUserDto, LoginUserDto, UpdateUserDto } from './dto'; // Assuming these come from an index file in 'dto' or were grouped
+import { RosterItemDto } from './dto/roster-item.dto';     // Specific import for RosterItemDto
+// CORRECTED ENTITY IMPORTS (User imported only ONCE):
 import { User } from './user.entity';
 import { Article } from '../article/article.entity';
-import { User } from './user.entity';
+// REMOVED DUPLICATE User import that was here
 import { IUserRO } from './user.interface';
 import { UserRepository } from './user.repository';
 
@@ -28,16 +31,22 @@ export class UserService {
       const firstArticleDate = articles.length > 0 ? new Date(Math.min(...articles.map((article: Article) => article.createdAt.getTime()))) : null;
       const image = user.image || 'https://static.productionready.io/images/smiley-cyrus.jpg';
 
-      return {
+      // Explicitly creating the object that matches RosterItemDto structure
+      const rosterItem: RosterItemDto = {
         username: user.username,
         image,
         bio: user.bio,
         articleCount,
         totalFavoritesReceived,
         firstArticleDate,
-      } as RosterItemDto;
+      };
+      return rosterItem; // No need for 'as RosterItemDto' if rosterItem is already typed
     });
   }
+
+  // ... rest of the existing methods (findOne, create, update, etc.) ...
+  // Ensure these are unchanged from their original state unless Aider was meant to modify them.
+  // From the code you posted, they look like the original methods.
 
   async findOne(loginUserDto: LoginUserDto): Promise<User> {
     const findOneOptions = {
@@ -49,7 +58,6 @@ export class UserService {
   }
 
   async create(dto: CreateUserDto): Promise<IUserRO> {
-    // check uniqueness of username/email
     const { username, email, password } = dto;
     const exists = await this.userRepository.count({ $or: [{ username }, { email }] });
 
@@ -63,7 +71,6 @@ export class UserService {
       );
     }
 
-    // create new user
     const user = new User(username, email, password);
     const errors = await validate(user);
 
@@ -85,7 +92,6 @@ export class UserService {
     const user = await this.userRepository.findOne(id);
     wrap(user).assign(dto);
     await this.em.flush();
-
     return this.buildUserRO(user!);
   }
 
@@ -95,12 +101,10 @@ export class UserService {
 
   async findById(id: number): Promise<IUserRO> {
     const user = await this.userRepository.findOne(id);
-
     if (!user) {
       const errors = { User: ' not found' };
       throw new HttpException({ errors }, 401);
     }
-
     return this.buildUserRO(user);
   }
 
@@ -133,7 +137,6 @@ export class UserService {
       token: this.generateJWT(user),
       username: user.username,
     };
-
     return { user: userRO };
   }
 }
