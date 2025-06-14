@@ -1,16 +1,22 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthMiddleware } from '../user/auth.middleware';
-import { User } from '../user/user.entity';
+// User entity import might not be needed here if UserModule exports repository providers
+// import { User } from '../user/user.entity';
 import { UserModule } from '../user/user.module';
 import { ArticleController } from './article.controller';
 import { Article } from './article.entity';
 import { ArticleService } from './article.service';
 import { Comment } from './comment.entity';
+import { TagModule } from '../tag/tag.module'; // <<<< ADD THIS IMPORT
 
 @Module({
   controllers: [ArticleController],
-  imports: [MikroOrmModule.forFeature({ entities: [Article, Comment, User] }), UserModule],
+  imports: [
+    MikroOrmModule.forFeature({ entities: [Article, Comment] }), // Define entities local to this module
+    UserModule,    // Import UserModule for its exported providers (like UserRepository)
+    TagModule,     // <<<< ADD TagModule HERE
+  ],
   providers: [ArticleService],
 })
 export class ArticleModule implements NestModule {

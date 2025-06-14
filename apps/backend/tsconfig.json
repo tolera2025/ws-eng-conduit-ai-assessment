@@ -5,10 +5,8 @@
   "references": [
     {
       "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
     }
+    // The reference to "./tsconfig.spec.json" has been removed
   ],
   "compilerOptions": {
     "esModuleInterop": true,
